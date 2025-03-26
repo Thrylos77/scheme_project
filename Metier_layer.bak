@@ -1,5 +1,5 @@
 #lang scheme
-(provide reformat get-operateur premier-operande deuxieme-operande constructeur est-constante? est-identificateur? est-surparenthese?)
+(provide get-operateur premier-operande deuxieme-operande constructeur est-constante? est-identificateur? est-surparenthese?)
 
 ; Une expression arithmétique a trois forme
 ;      1) Forme Préfixé   (+ x 1)
@@ -7,28 +7,8 @@
 ;      3) Forme Suffixé   (x 1 +)
 
 
-;; Fonction pour reformater une expressino en (opérande1 operateur opérande2)
-(define (reformat exp)
-       (cond
-         ((not (list? exp)) exp)                                                          ; Si ce n'est pas une liste, on ne modifie pas.
-
-         ((and (= (length exp) 3)                                                         ; Cas classique : (+ 5 x) => (5 + x)
-               (or (equal? (car exp) '+)
-                   (equal? (car exp) '-)
-                   (equal? (car exp) '*)))
-                                                                            (list (reformat (cadr exp)) (car exp) (reformat (caddr exp))))
-         
-         ((and (= (length exp) 3)                                                         ; Cas inversé : (5 x +) => (5 + x)
-               (or (eq? (caddr exp) '+)
-                   (eq? (caddr exp) '-)
-                   (eq? (caddr exp) '*)))
-                                                                             (list (reformat (car exp)) (caddr exp) (reformat (cadr exp))))
-      
-         (else (map reformat exp))))
-
-
 (define get-operateur (lambda (exp)                        ;fonction operateur : expression ------> operateur
-                    (car (cdr (reformat exp)))                        ;return l'operateur principale d'une expression arithmétique 
+                    (car (cdr exp))                        ;return l'operateur principale d'une expression arithmétique 
                  ))
 
 (define premier-operande (lambda (exp)                     ;fonction opde1 : expression ------> expression
